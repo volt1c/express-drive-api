@@ -1,0 +1,12 @@
+version: "1"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: volt1c/express-drive
+    ports:
+      - 8080:8080
+    volumes:
+      - ./dist:/code

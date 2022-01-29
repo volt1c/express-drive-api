@@ -13,7 +13,9 @@
     "lint": "eslint . --ext .ts,.js",
     "lint:fix": "eslint . --ext .ts,.js --fix",
     "test": "jest",
-    "collect-coverage": "jest --coverage"
+    "collect-coverage": "jest --coverage",
+    "docker:build": "yarn build && docker-compose build",
+    "docker:run": "echo !!! it is recommended to use docker extension !!! && docker run volt1c/express-drive"
   },
   "dependencies": {
     "body-parser": "^1.19.1",
