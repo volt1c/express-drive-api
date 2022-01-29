@@ -1,5 +1,11 @@
+# Directories
 .git/
 node_modules/
 src/
 tests/
+
+# Files
 jest.config.json
+.prettierrc
+.gitignore
+*.example
