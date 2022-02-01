@@ -44,10 +44,10 @@ describe('FilesService', () => {
       expect(wasSaved).toBeTruthy()
     })
 
-    it('should throw Error', () => {
-      const fn = () => service.upload('fakeTestId', mockUploadedFile)
+    it('should throw Error `incorrect id`', () => {
+      const fn = () => service.upload('fakeId', mockUploadedFile)
 
-      expect(fn).toThrowError()
+      expect(fn).toThrowError('incorrect id')
     })
   })
 
@@ -59,6 +59,12 @@ describe('FilesService', () => {
       if (existsSync(pathToFile)) text = readFileSync(pathToFile, 'utf8')
 
       expect(text).toEqual('some string')
+    })
+
+    it('should throw error `incorrect id`', () => {
+      const fn = () => service.getFilePath('fakeId', 'fakeFile.txt')
+
+      expect(fn).toThrowError('incorrect id')
     })
 
     it('should throw error `file not found`', () => {
@@ -79,6 +85,18 @@ describe('FilesService', () => {
       const resp = service.getFilesNames('userId', 'subfolder')
 
       expect(resp).toEqual(['..', 'subFile.txt'])
+    })
+
+    it('should throw Error `incorrect id`', () => {
+      const fn = () => service.getFilesNames('fakeId')
+
+      expect(fn).toThrowError('incorrect id')
+    })
+
+    it('should throw Error `there is no such path`', () => {
+      const fn = () => service.getFilesNames('userId', 'fakeSubfolder')
+
+      expect(fn).toThrowError('there is no such path')
     })
   })
 })
