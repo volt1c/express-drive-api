@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import fileUpload from 'express-fileupload'
-import { Controller, IRoute, Methods, Service } from '../typings'
+import { Controller, IRoute, Methods } from '../typings'
+import { FilesService } from './files.service'
 
 export class FilesController extends Controller {
-  constructor(service: Service) {
+  constructor(service: FilesService) {
     super(service)
   }
 
