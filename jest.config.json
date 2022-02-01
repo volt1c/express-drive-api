@@ -1,8 +1,8 @@
 {
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": "./tests",
-    "preset": "ts-jest",
-    "collectCoverageFrom": ["tests/*.(t|j)s"],
-    "coverageDirectory": "./coverage",
-    "testEnvironment": "node"
-  }
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "./tests",
+  "preset": "ts-jest",
+  "collectCoverageFrom": ["tests/*.(t|j)s"],
+  "coverageDirectory": "./coverage",
+  "testEnvironment": "node"
+}
