@@ -42,6 +42,6 @@ $ yarn docker:build
 
 ### Run Docker image
 ```
-$ yarn docker:build
+$ yarn docker:run
 ```
 ###### I recommend using docker extension for this
