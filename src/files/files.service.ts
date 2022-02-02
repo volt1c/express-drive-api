@@ -9,7 +9,7 @@ export class FilesService extends Service {
     throw Error('Not implemented')
   }
 
-  getFilePath(userId: string, fileName: string): string {
+  getFile(userId: string, filePath: string): string {
     throw Error('Not implemented')
   }
 

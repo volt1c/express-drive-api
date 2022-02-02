@@ -53,7 +53,7 @@ describe('FilesService', () => {
 
   describe('getFilePath', () => {
     it('should get path to file', () => {
-      const pathToFile = service.getFilePath('testId', 'testFile.txt')
+      const pathToFile = service.getFile('testId', 'testFile.txt')
 
       let text = '>> no such file'
       if (existsSync(pathToFile)) text = readFileSync(pathToFile, 'utf8')
@@ -62,13 +62,13 @@ describe('FilesService', () => {
     })
 
     it('should throw error `incorrect id`', () => {
-      const fn = () => service.getFilePath('fakeId', 'fakeFile.txt')
+      const fn = () => service.getFile('fakeId', 'fakeFile.txt')
 
       expect(fn).toThrowError("dir for this user doesn't exist")
     })
 
     it('should throw error `file not found`', () => {
-      const fn = () => service.getFilePath('testId', 'fakeFile.txt')
+      const fn = () => service.getFile('testId', 'fakeFile.txt')
 
       expect(fn).toThrowError("this dir doesn't exist")
     })
