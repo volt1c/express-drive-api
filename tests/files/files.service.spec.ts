@@ -78,7 +78,7 @@ describe('FilesService', () => {
     it('should get files names from main directory', () => {
       const resp = service.getFilesNames('testId')
 
-      expect(resp).toEqual(['testFile.txt'])
+      expect(resp).toEqual(['subfolder', 'testFile.txt'])
     })
 
     it('should get files names from subdirectory', () => {
