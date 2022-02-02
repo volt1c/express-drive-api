@@ -19,7 +19,8 @@ export class FilesService extends Service {
     const pathToDir = join(userStorageDir, path)
     const isPathSubDir = this.isSubDir(userStorageDir, pathToDir)
 
-    if (path !== '' && !isPathSubDir) throw new Error('access denied')
+    if (!['', '/'].includes(path) && !isPathSubDir)
+      throw new Error('access denied')
     if (!existsSync(userStorageDir))
       throw new Error("dir for this user doesn't exist")
     if (!existsSync(pathToDir)) throw new Error("this dir doesn't exist")
