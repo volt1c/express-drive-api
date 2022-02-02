@@ -64,39 +64,39 @@ describe('FilesService', () => {
     it('should throw error `incorrect id`', () => {
       const fn = () => service.getFilePath('fakeId', 'fakeFile.txt')
 
-      expect(fn).toThrowError('incorrect id')
+      expect(fn).toThrowError("dir for this user doesn't exist")
     })
 
     it('should throw error `file not found`', () => {
       const fn = () => service.getFilePath('testId', 'fakeFile.txt')
 
-      expect(fn).toThrowError('file not found')
+      expect(fn).toThrowError("this dir doesn't exist")
     })
   })
 
   describe('getFilesNames', () => {
     it('should get files names from main directory', () => {
-      const resp = service.getFilesNames('userId')
+      const resp = service.getFilesNames('testId')
 
       expect(resp).toEqual(['testFile.txt'])
     })
 
     it('should get files names from subdirectory', () => {
-      const resp = service.getFilesNames('userId', 'subfolder')
+      const resp = service.getFilesNames('testId', 'subfolder')
 
       expect(resp).toEqual(['..', 'subFile.txt'])
     })
 
-    it('should throw Error `incorrect id`', () => {
+    it("should throw Error `dir for this user doesn't exist`", () => {
       const fn = () => service.getFilesNames('fakeId')
 
-      expect(fn).toThrowError('incorrect id')
+      expect(fn).toThrowError("dir for this user doesn't exist")
     })
 
-    it('should throw Error `there is no such path`', () => {
-      const fn = () => service.getFilesNames('userId', 'fakeSubfolder')
+    it("should throw Error `this dir doesn't exist`", () => {
+      const fn = () => service.getFilesNames('testId', 'fakeSubfolder')
 
-      expect(fn).toThrowError('there is no such path')
+      expect(fn).toThrowError("this dir doesn't exist")
     })
   })
 })
