@@ -98,5 +98,11 @@ describe('FilesService', () => {
 
       expect(fn).toThrowError("this dir doesn't exist")
     })
+
+    it('should throw Error `access denied`', () => {
+      const fn = () => service.getFilesNames('testId', '../fakeId')
+
+      expect(fn).toThrowError('access denied')
+    })
   })
 })
