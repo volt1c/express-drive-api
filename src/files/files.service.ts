@@ -23,9 +23,9 @@ export class FilesService extends Service {
       throw new Error('access denied')
     if (!existsSync(userStorageDir))
       throw new Error("dir for this user doesn't exist")
-    if (!existsSync(pathToDir)) throw new Error("this dir doesn't exist")
+    if (!existsSync(pathToDir)) throw new Error("this path doesn't exist")
 
-    const dir = readdirSync(join(storageDir, userId, path))
+    const dir = readdirSync(pathToDir)
 
     if (isPathSubDir) dir.unshift('..')
 
