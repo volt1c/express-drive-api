@@ -51,11 +51,17 @@ describe('FilesService', () => {
     })
   })
 
-  describe('getFilePath', () => {
-    it('should get path to file', () => {
+  describe('getFile', () => {
+    it('should get correct path', () => {
       const pathToFile = service.getFile('testId', 'testFile.txt')
 
-      let text = '>> no such file'
+      expect(existsSync(pathToFile)).toBeTruthy()
+    })
+
+    it('should get correct file content', () => {
+      const pathToFile = service.getFile('testId', 'testFile.txt')
+
+      let text = 'no file'
       if (existsSync(pathToFile)) text = readFileSync(pathToFile, 'utf8')
 
       expect(text).toEqual('some string')
