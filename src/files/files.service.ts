@@ -5,7 +5,7 @@ import { relative } from 'path/posix'
 import { Service } from '../typings'
 
 export class FilesService extends Service {
-  upload(userId: string, file: UploadedFile): string {
+  upload(userId: string, file: UploadedFile, path = ''): string {
     throw Error('Not implemented')
   }
 
