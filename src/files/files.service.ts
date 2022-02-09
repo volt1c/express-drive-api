@@ -5,42 +5,27 @@ import { relative } from 'path/posix'
 import { Service } from '../typings'
 
 export class FilesService extends Service {
+  private readonly storageDir = join(process.cwd(), 'storage')
+
   upload(userId: string, file: UploadedFile, path = ''): string {
     throw Error('Not implemented')
   }
 
-  getFile(userId: string, filePath: string): string {
-    const storageDir = join(process.cwd(), 'storage')
-    const userStorageDir = join(storageDir, userId)
-    const pathToDir = join(userStorageDir, filePath)
-    const isPathSubDir = this.isSubDir(userStorageDir, pathToDir)
-
-    if (!['', '/'].includes(filePath) && !isPathSubDir)
-      throw new Error('access denied')
-    if (!existsSync(userStorageDir))
-      throw new Error("dir for this user doesn't exist")
-    if (!existsSync(pathToDir)) throw new Error("this path doesn't exist")
-
-    return pathToDir
+  getFile(userId: string, path: string): string {
+    return this.validatePathData(userId, path)
   }
 
   getFilesNames(userId: string, path = ''): string[] {
-    const storageDir = join(process.cwd(), 'storage')
-    const userStorageDir = join(storageDir, userId)
-    const pathToDir = join(userStorageDir, path)
-    const isPathSubDir = this.isSubDir(userStorageDir, pathToDir)
+    const dir = this.validatePathData(userId, path)
 
-    if (!['', '/'].includes(path) && !isPathSubDir)
-      throw new Error('access denied')
-    if (!existsSync(userStorageDir))
-      throw new Error("dir for this user doesn't exist")
-    if (!existsSync(pathToDir)) throw new Error("this path doesn't exist")
+    const userStorage = join(this.storageDir, userId)
+    const isPathSubDir = this.isSubDir(userStorage, dir)
 
-    const dir = readdirSync(pathToDir)
+    const contents = readdirSync(dir)
 
-    if (isPathSubDir) dir.unshift('..')
+    if (isPathSubDir) contents.unshift('..')
 
-    return dir
+    return contents
   }
 
   private isSubDir(parent: string, dir: string): boolean {
@@ -49,5 +34,23 @@ export class FilesService extends Service {
       dir.replaceAll('\\', '/')
     )
     return !!rel && !rel.startsWith('..') && !isAbsolute(rel)
+  }
+
+  private validatePathData(userId: string, path: string): string | never {
+    const userStorage = join(this.storageDir, userId)
+    const fileOrDir = join(userStorage, path)
+
+    const isSubDir =
+      ['', '/'].includes(path) || this.isSubDir(userStorage, fileOrDir)
+    if (!isSubDir) throw new Error('access denied')
+
+    const isThereStorageForThisId = existsSync(userStorage)
+    if (!isThereStorageForThisId)
+      throw new Error("dir for this user doesn't exist")
+
+    const isThereFileOrDir = existsSync(fileOrDir)
+    if (!isThereFileOrDir) throw new Error("this path doesn't exist")
+
+    return fileOrDir
   }
 }
