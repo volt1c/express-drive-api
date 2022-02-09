@@ -44,10 +44,10 @@ describe('FilesService', () => {
       expect(wasSaved).toBeTruthy()
     })
 
-    it('should throw Error `incorrect id`', () => {
+    it("should throw Error `dir for this user doesn't exist`", () => {
       const fn = () => service.upload('fakeId', mockUploadedFile)
 
-      expect(fn).toThrowError('incorrect id')
+      expect(fn).toThrowError("dir for this user doesn't exist")
     })
   })
 
@@ -67,16 +67,16 @@ describe('FilesService', () => {
       expect(text).toEqual('some string')
     })
 
-    it('should throw error `incorrect id`', () => {
+    it("should throw error `dir for this user doesn't exist`", () => {
       const fn = () => service.getFile('fakeId', 'fakeFile.txt')
 
       expect(fn).toThrowError("dir for this user doesn't exist")
     })
 
-    it('should throw error `file not found`', () => {
+    it("should throw error `this path doesn't exist`", () => {
       const fn = () => service.getFile('testId', 'fakeFile.txt')
 
-      expect(fn).toThrowError("this dir doesn't exist")
+      expect(fn).toThrowError("this path doesn't exist")
     })
   })
 
@@ -99,10 +99,10 @@ describe('FilesService', () => {
       expect(fn).toThrowError("dir for this user doesn't exist")
     })
 
-    it("should throw Error `this dir doesn't exist`", () => {
+    it("should throw Error `this path doesn't exist`", () => {
       const fn = () => service.getFilesNames('testId', 'fakeSubfolder')
 
-      expect(fn).toThrowError("this dir doesn't exist")
+      expect(fn).toThrowError("this path doesn't exist")
     })
 
     it('should throw Error `access denied`', () => {
