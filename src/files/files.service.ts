@@ -7,8 +7,12 @@ import { Service } from '../typings'
 export class FilesService extends Service {
   private readonly storageDir = join(process.cwd(), 'storage')
 
-  upload(userId: string, file: UploadedFile, path = ''): string {
-    throw Error('Not implemented')
+  async upload(userId: string, file: UploadedFile, path = ''): Promise<string> {
+    const aim = this.validatePathData(userId, path)
+
+    await file.mv(join(aim, file.name))
+
+    return 'file succesfully uploaded'
   }
 
   getFile(userId: string, path: string): string {
