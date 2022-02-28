@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, unlinkSync } from 'fs'
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import mockFs from 'mock-fs'
 import { FilesService } from '../../src/files/files.service'
 import { mockUploadedFile } from './files.mock'
@@ -27,27 +27,42 @@ describe('FilesService', () => {
       expect(result).toEqual(expected)
     })
 
+    it('mockFs should allow to create file', () => {
+      const file = `${process.cwd()}/storage/testId/newFile.txt`
+      const content = `some new string`
+
+      writeFileSync(file, content)
+
+      const result = readFileSync(file, 'utf8')
+      expect(result).toEqual(content)
+    })
+
     it('service should be defined', () => {
       expect(service).toBeDefined()
     })
   })
 
   describe('upload', () => {
-    it('should upload file', () => {
-      const resp = service.upload('testId', mockUploadedFile)
+    it('should upload file', async () => {
       const file = `${process.cwd()}/storage/testId/mockFile.txt`
+
+      const uploadRes = await service.upload('testId', mockUploadedFile)
+
       const wasSaved = existsSync(file)
 
       if (wasSaved) unlinkSync(file)
 
-      expect(resp).toEqual('file succesfully uploaded')
+      expect(uploadRes).toEqual('file succesfully uploaded')
       expect(wasSaved).toBeTruthy()
     })
 
-    it("should throw Error `dir for this user doesn't exist`", () => {
-      const fn = () => service.upload('fakeId', mockUploadedFile)
-
-      expect(fn).toThrowError("dir for this user doesn't exist")
+    it("should throw Error `dir for this user doesn't exist`", async () => {
+      try {
+        await service.upload('fakeId', mockUploadedFile)
+        throw Error()
+      } catch (e) {
+        expect((e as Error).message).toEqual("dir for this user doesn't exist")
+      }
     })
   })
 
