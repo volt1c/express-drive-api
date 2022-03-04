@@ -12,12 +12,15 @@ export class Server {
   }
 
   public loadControllers(controllers: Controller[]) {
+    this.app.head('/', (req, res) => res.status(200).end())
+
     controllers.forEach((controller) => {
       this.app.use(controller.path, controller.setRoutes())
     })
   }
 
-  run() {
+  run(): Application {
     this.app.listen(this.port)
+    return this.app
   }
 }
