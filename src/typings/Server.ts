@@ -1,5 +1,6 @@
 import { Application, RequestHandler } from 'express'
 import { Controller } from '.'
+import http from 'http'
 
 export class Server {
   constructor(
@@ -19,8 +20,10 @@ export class Server {
     })
   }
 
-  run(): Application {
-    this.app.listen(this.port)
-    return this.app
+  run(): { server: http.Server; app: Application } {
+    return {
+      server: this.app.listen(this.port),
+      app: this.app,
+    }
   }
 }
