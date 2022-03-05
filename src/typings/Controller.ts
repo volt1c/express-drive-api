@@ -16,13 +16,8 @@ export type IRoute = {
   middlewares: RequestHandler[]
 }
 
-export abstract class Controller<T extends Service = Service> {
-  constructor(service?: T) {
-    this.service = service
-  }
-
+export abstract class Controller {
   public abstract readonly path: string
-  protected readonly service: T | undefined
   protected abstract readonly routes: IRoute[]
   private readonly router = Router()
 
