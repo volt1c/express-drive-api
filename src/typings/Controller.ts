@@ -1,5 +1,4 @@
 import { RequestHandler, Router } from 'express'
-import { Service } from '.'
 
 export enum Methods {
   GET = 'get',
@@ -17,12 +16,7 @@ export type IRoute = {
 }
 
 export abstract class Controller {
-  constructor(service?: Service) {
-    if (service) this.service = service
-  }
-
   public abstract readonly path: string
-  protected readonly service: Service | undefined
   protected abstract readonly routes: IRoute[]
   private readonly router = Router()
 
