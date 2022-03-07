@@ -2,7 +2,6 @@ import bodyParser from 'body-parser'
 import express, { Application, RequestHandler } from 'express'
 import { Controller, Server } from './typings'
 import { FilesController } from './files/files.controller'
-import { FilesService } from './files/files.service'
 import config from './config'
 
 config()
