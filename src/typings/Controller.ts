@@ -1,5 +1,4 @@
 import { RequestHandler, Router } from 'express'
-import { Service } from '.'
 
 export enum Methods {
   GET = 'get',

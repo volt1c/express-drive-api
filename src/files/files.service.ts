@@ -2,9 +2,8 @@ import { UploadedFile } from 'express-fileupload'
 import { existsSync, readdirSync } from 'fs'
 import { isAbsolute, join } from 'path'
 import { relative } from 'path/posix'
-import { Service } from '../typings'
 
-export class FilesService extends Service {
+export class FilesService {
   private readonly storageDir = join(process.cwd(), 'storage')
 
   async upload(userId: string, file: UploadedFile, path = ''): Promise<string> {

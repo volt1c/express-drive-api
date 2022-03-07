@@ -3,7 +3,6 @@ import { Controller, Server } from '../../src/typings'
 import supertest from 'supertest'
 import bodyParser from 'body-parser'
 import { FilesController } from '../../src/files/files.controller'
-import { FilesService } from '../../src/files/files.service'
 import http from 'http'
 
 describe('Files e2e', () => {
@@ -12,7 +11,7 @@ describe('Files e2e', () => {
   let request
 
   beforeAll(() => {
-    const controllers: Controller[] = [new FilesController(new FilesService())]
+    const controllers: Controller[] = [new FilesController()]
     const middlewares: RequestHandler[] = [bodyParser.json()]
 
     const api = new Server(express(), 8080)
