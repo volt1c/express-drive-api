@@ -22,9 +22,7 @@ export abstract class Controller {
 
   public setRoutes(): Router {
     for (const route of this.routes) {
-      for (const middleware in route.middlewares) {
-        this.router.use(middleware)
-      }
+      route.middlewares.forEach((middleware) => this.router.use(middleware))
       this.router[route.method](route.path, route.handler)
     }
     return this.router

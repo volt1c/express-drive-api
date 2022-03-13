@@ -1,5 +1,6 @@
 import { Application, RequestHandler } from 'express'
 import { Controller } from '.'
+import http from 'http'
 
 export class Server {
   constructor(
@@ -12,12 +13,17 @@ export class Server {
   }
 
   public loadControllers(controllers: Controller[]) {
+    this.app.head('/', (req, res) => res.status(200).end())
+
     controllers.forEach((controller) => {
       this.app.use(controller.path, controller.setRoutes())
     })
   }
 
-  run() {
-    this.app.listen(this.port)
+  run(): { server: http.Server; app: Application } {
+    return {
+      server: this.app.listen(this.port),
+      app: this.app,
+    }
   }
 }
