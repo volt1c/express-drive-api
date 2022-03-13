@@ -15,7 +15,7 @@ const port: number = process.env.PORT ? parseInt(process.env.PORT) : 8080
 
 const server = new Server(app, port)
 
-server.loadControllers(controllers)
 server.loadMiddlewares(middlewares)
+server.loadControllers(controllers)
 
 server.run()
