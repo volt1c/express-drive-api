@@ -1,15 +1,16 @@
-import bodyParser from 'body-parser'
 import express, { Application, RequestHandler } from 'express'
+import bodyParser from 'body-parser'
 import { Controller, Server } from './typings'
 import { FilesController } from './files/files.controller'
+import { AuthController } from './auth/auth.controller'
+import { connect } from 'mongoose'
 import config from './config'
-import mongoose from 'mongoose'
 
 config()
 
 const app: Application = express()
 
-const controllers: Controller[] = [new FilesController()]
+const controllers: Controller[] = [new FilesController(), new AuthController()]
 const middlewares: RequestHandler[] = [bodyParser.json()]
 
 const mongoUri: string = process.env.MONGO_URI as string
@@ -20,8 +21,7 @@ const server = new Server(app, port)
 server.loadControllers(controllers)
 server.loadMiddlewares(middlewares)
 
-mongoose
-  .connect(mongoUri)
+connect(mongoUri)
   .then(() => {
     console.info('Mongoose is connected')
     server.run()
