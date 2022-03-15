@@ -28,7 +28,8 @@ export class FilesController extends Controller {
 
   upload(req: Request, res: Response) {
     if (typeof req.files?.file == 'object') {
-      const id = 'test' // req.user.id
+      const id = req.session['user']?.id
+      if (!id) return res.status(401).send('unauthorized')
       const file = req.files?.file as UploadedFile
       const service = new FilesService()
       res.status(201).end(service.upload(id, file))
@@ -37,7 +38,8 @@ export class FilesController extends Controller {
   }
 
   download(req: Request, res: Response) {
-    const id = 'test' // req.user.id
+    const id = req.session['user']?.id
+    if (!id) return res.status(401).send('unauthorized')
     const path = req.query?.path ?? ''
     const service = new FilesService()
     const file = service.getFile(id, path as string)
@@ -45,7 +47,8 @@ export class FilesController extends Controller {
   }
 
   getFiles(req: Request, res: Response) {
-    const id = 'test' // req.user.id
+    const id = req.session['user']?.id
+    if (!id) return res.status(401).send('unauthorized')
     const path = req.query?.path ?? ''
     const service = new FilesService()
     const names = service.getFilesNames(id, path as string)
