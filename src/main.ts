@@ -15,6 +15,8 @@ const controllers: Controller[] = [new FilesController(), new AuthController()]
 const middlewares: RequestHandler[] = [
   bodyParser.json(),
   session({
+    resave: true,
+    saveUninitialized: true,
     secret: 'secret',
     cookie: {
       path: '/',
