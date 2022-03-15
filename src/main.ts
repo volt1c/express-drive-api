@@ -1,5 +1,6 @@
 import express, { Application, RequestHandler } from 'express'
 import bodyParser from 'body-parser'
+import session from 'express-session'
 import { Controller, Server } from './typings'
 import { FilesController } from './files/files.controller'
 import { AuthController } from './auth/auth.controller'
@@ -11,7 +12,18 @@ config()
 const app: Application = express()
 
 const controllers: Controller[] = [new FilesController(), new AuthController()]
-const middlewares: RequestHandler[] = [bodyParser.json()]
+const middlewares: RequestHandler[] = [
+  bodyParser.json(),
+  session({
+    secret: 'secret',
+    cookie: {
+      path: '/',
+      httpOnly: true,
+      secure: false,
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  }),
+]
 
 const mongoUri: string = process.env.MONGO_URI as string
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 8080
