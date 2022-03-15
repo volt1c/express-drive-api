@@ -5,37 +5,22 @@ import { Controller, Server } from './typings'
 import { FilesController } from './files/files.controller'
 import { AuthController } from './auth/auth.controller'
 import { connect } from 'mongoose'
-import config from './config'
-
-config()
+import { config } from './config'
 
 const app: Application = express()
 
 const controllers: Controller[] = [new FilesController(), new AuthController()]
 const middlewares: RequestHandler[] = [
   bodyParser.json(),
-  session({
-    resave: true,
-    saveUninitialized: true,
-    secret: 'secret',
-    cookie: {
-      path: '/',
-      httpOnly: true,
-      secure: false,
-      maxAge: 24 * 60 * 60 * 1000,
-    },
-  }),
+  session(config.session),
 ]
 
-const mongoUri: string = process.env.MONGO_URI as string
-const port: number = process.env.PORT ? parseInt(process.env.PORT) : 8080
-
-const server = new Server(app, port)
+const server = new Server(app, config.server.port)
 
 server.loadControllers(controllers)
 server.loadMiddlewares(middlewares)
 
-connect(mongoUri)
+connect(config.mongoose.uri)
   .then(() => {
     console.info('Mongoose is connected')
     server.run()
