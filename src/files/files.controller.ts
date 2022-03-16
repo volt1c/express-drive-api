@@ -26,13 +26,13 @@ export class FilesController extends Controller {
     },
   ]
 
-  upload(req: Request, res: Response) {
+  async upload(req: Request, res: Response) {
     if (typeof req.files?.file == 'object') {
       const id = req.session['user']?.id
       if (!id) return res.status(401).send('unauthorized')
       const file = req.files?.file as UploadedFile
       const service = new FilesService()
-      res.status(201).end(service.upload(id, file))
+      res.status(201).end(await service.upload(id, file))
     }
     return res.status(400).end('faild')
   }
