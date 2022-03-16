@@ -42,6 +42,49 @@ describe('FilesService', () => {
     })
   })
 
+  describe('init', () => {
+    it('should init storage for user', async () => {
+      const resp = await service.init('testId2')
+
+      const exists = existsSync(`${process.cwd()}/storage/testId2`)
+
+      expect(exists).toBeTruthy()
+      expect(resp).toEqual('created')
+    })
+
+    it('should inform that storage exists', async () => {
+      const resp = await service.init('testId')
+
+      expect(resp).toEqual('already exist')
+    })
+  })
+
+  describe('makeDir', () => {
+    it('should create dir for user', async () => {
+      const resp = await service.makeDir('testId2', 'subfolder2')
+
+      const exists = existsSync(`${process.cwd()}/storage/testId2`)
+
+      expect(exists).toBeTruthy()
+      expect(resp).toEqual('created')
+    })
+
+    it('should inform that dir exists', async () => {
+      const resp = await service.makeDir('testId', 'subfolder')
+
+      expect(resp).toEqual('already exist')
+    })
+
+    it('should throw error `incorrect path`', async () => {
+      try {
+        await service.makeDir('testId', '../subfolder')
+        throw Error()
+      } catch (e) {
+        expect((e as Error).message).toEqual('incorrect path')
+      }
+    })
+  })
+
   describe('upload', () => {
     it('should upload file', async () => {
       const file = `${process.cwd()}/storage/testId/mockFile.txt`

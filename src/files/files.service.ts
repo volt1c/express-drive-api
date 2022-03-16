@@ -1,10 +1,33 @@
 import { UploadedFile } from 'express-fileupload'
-import { existsSync, readdirSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync } from 'fs'
 import { isAbsolute, join } from 'path'
 import { relative } from 'path/posix'
 
 export class FilesService {
   private readonly storageDir = join(process.cwd(), 'storage')
+
+  init(userId: string) {
+    const aim = join(this.storageDir, userId)
+
+    if (!existsSync(aim)) {
+      mkdirSync(aim, { recursive: true })
+      return 'created'
+    }
+    return 'already exist'
+  }
+
+  makeDir(userId: string, path: string) {
+    const userDir = join(this.storageDir, userId)
+    const aim = join(userDir, path)
+
+    if (!this.isSubDir(userDir, aim)) throw new Error('incorrect path')
+
+    if (!existsSync(aim)) {
+      mkdirSync(aim, { recursive: true })
+      return 'created'
+    }
+    return 'already exist'
+  }
 
   async upload(userId: string, file: UploadedFile, path = ''): Promise<string> {
     const aim = this.validatePathData(userId, path)

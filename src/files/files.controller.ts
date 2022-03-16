@@ -7,6 +7,18 @@ export class FilesController extends Controller {
   public readonly path: string = '/files'
   protected routes: IRoute[] = [
     {
+      path: '/init',
+      method: Methods.POST,
+      handler: this.init,
+      middlewares: [],
+    },
+    {
+      path: '/mkdir',
+      method: Methods.POST,
+      handler: this.makeDir,
+      middlewares: [],
+    },
+    {
       path: '/upload',
       method: Methods.POST,
       handler: this.upload,
@@ -25,6 +37,22 @@ export class FilesController extends Controller {
       middlewares: [],
     },
   ]
+
+  init(req: Request, res: Response) {
+    const id = req.session['user']?.id
+    if (!id) return res.status(401).send('unauthorized')
+    const service = new FilesService()
+    res.status(201).end(service.init(id))
+  }
+
+  makeDir(req: Request, res: Response) {
+    const id = req.session['user']?.id
+    const dir = req.body.path
+    if (!id) return res.status(401).send('unauthorized')
+    if (!id) return res.status(400).send('no path')
+    const service = new FilesService()
+    res.status(201).end(service.makeDir(id, dir))
+  }
 
   async upload(req: Request, res: Response) {
     if (typeof req.files?.file == 'object') {
