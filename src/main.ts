@@ -17,8 +17,8 @@ const middlewares: RequestHandler[] = [
 
 const server = new Server(app, config.server.port)
 
-server.loadControllers(controllers)
 server.loadMiddlewares(middlewares)
+server.loadControllers(controllers)
 
 connect(config.mongoose.uri)
   .then(() => {
