@@ -7,7 +7,7 @@ export const UserSchema = new Schema({
     unique: true,
   },
   hash: {
-    type: Number,
+    type: String,
     required: true,
   },
 })
