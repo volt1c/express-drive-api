@@ -41,7 +41,7 @@ export class AuthController extends Controller {
     const { name, pass } = req.body
 
     const user = await User.findOne({ name }).exec()
-    if (!user) return res.status(403).send('this user already exist')
+    if (user) return res.status(403).send('this user already exist')
 
     const hash = await bcrypt.hash(pass, 10)
 
