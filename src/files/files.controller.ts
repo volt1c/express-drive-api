@@ -19,7 +19,7 @@ export class FilesController extends Controller {
       middlewares: [],
     },
     {
-      path: '/get-files',
+      path: '/list',
       method: Methods.GET,
       handler: this.getFiles,
       middlewares: [],
