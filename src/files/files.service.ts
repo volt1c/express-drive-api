@@ -2,6 +2,7 @@ import { UploadedFile } from 'express-fileupload'
 import { existsSync, mkdirSync, readdirSync } from 'fs'
 import { isAbsolute, join } from 'path'
 import { relative } from 'path/posix'
+import { ServiceError } from '../typings'
 
 export class FilesService {
   private readonly storageDir = join(process.cwd(), 'storage')
@@ -9,27 +10,32 @@ export class FilesService {
   init(userId: string) {
     const aim = join(this.storageDir, userId)
 
-    if (!existsSync(aim)) {
-      mkdirSync(aim, { recursive: true })
-      return 'created'
-    }
-    return 'already exist'
+    if (existsSync(aim))
+      throw new ServiceError('already exist', 400)
+
+    mkdirSync(aim, { recursive: true })
+    return 'created'
   }
 
   makeDir(userId: string, path: string) {
     const userDir = join(this.storageDir, userId)
     const aim = join(userDir, path)
 
-    if (!this.isSubDir(userDir, aim)) throw new Error('incorrect path')
+    if (!this.isSubDir(userDir, aim))
+      throw new ServiceError('incorrect path', 400)
 
-    if (!existsSync(aim)) {
-      mkdirSync(aim, { recursive: true })
-      return 'created'
-    }
-    return 'already exist'
+    if (existsSync(aim))
+      throw new ServiceError('already exist', 400)
+
+    mkdirSync(aim, { recursive: true })
+    return 'created'
   }
 
-  async upload(userId: string, file: UploadedFile, path = ''): Promise<string> {
+  async upload(
+    userId: string,
+    file: UploadedFile,
+    path = ''
+  ): Promise<string> {
     const aim = this.validatePathData(userId, path)
 
     await file.mv(join(aim, file.name))
@@ -62,20 +68,28 @@ export class FilesService {
     return !!rel && !rel.startsWith('..') && !isAbsolute(rel)
   }
 
-  private validatePathData(userId: string, path: string): string | never {
+  private validatePathData(
+    userId: string,
+    path: string
+  ): string | never {
     const userStorage = join(this.storageDir, userId)
     const fileOrDir = join(userStorage, path)
 
     const isSubDir =
-      ['', '/'].includes(path) || this.isSubDir(userStorage, fileOrDir)
-    if (!isSubDir) throw new Error('access denied')
+      ['', '/'].includes(path) ||
+      this.isSubDir(userStorage, fileOrDir)
+    if (!isSubDir) throw new ServiceError('access denied', 400)
 
     const isThereStorageForThisId = existsSync(userStorage)
     if (!isThereStorageForThisId)
-      throw new Error("dir for this user doesn't exist")
+      throw new ServiceError(
+        "dir for this user doesn't exist",
+        400
+      )
 
     const isThereFileOrDir = existsSync(fileOrDir)
-    if (!isThereFileOrDir) throw new Error("this path doesn't exist")
+    if (!isThereFileOrDir)
+      throw new ServiceError("this path doesn't exist", 400)
 
     return fileOrDir
   }

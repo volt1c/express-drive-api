@@ -1,4 +1,9 @@
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
+import {
+  existsSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from 'fs'
 import mockFs from 'mock-fs'
 import { FilesService } from '../../src/files/files.service'
 import { mockUploadedFile } from './files.mock'
@@ -46,33 +51,46 @@ describe('FilesService', () => {
     it('should init storage for user', async () => {
       const resp = await service.init('testId2')
 
-      const exists = existsSync(`${process.cwd()}/storage/testId2`)
+      const exists = existsSync(
+        `${process.cwd()}/storage/testId2`
+      )
 
       expect(exists).toBeTruthy()
       expect(resp).toEqual('created')
     })
 
     it('should inform that storage exists', async () => {
-      const resp = await service.init('testId')
-
-      expect(resp).toEqual('already exist')
+      try {
+        await service.init('testId')
+        throw Error()
+      } catch (e) {
+        expect((e as Error).message).toEqual('already exist')
+      }
     })
   })
 
   describe('makeDir', () => {
     it('should create dir for user', async () => {
-      const resp = await service.makeDir('testId2', 'subfolder2')
+      const resp = await service.makeDir(
+        'testId2',
+        'subfolder2'
+      )
 
-      const exists = existsSync(`${process.cwd()}/storage/testId2`)
+      const exists = existsSync(
+        `${process.cwd()}/storage/testId2`
+      )
 
       expect(exists).toBeTruthy()
       expect(resp).toEqual('created')
     })
 
     it('should inform that dir exists', async () => {
-      const resp = await service.makeDir('testId', 'subfolder')
-
-      expect(resp).toEqual('already exist')
+      try {
+        await service.makeDir('testId', 'subfolder')
+        throw Error()
+      } catch (e) {
+        expect((e as Error).message).toEqual('already exist')
+      }
     })
 
     it('should throw error `incorrect path`', async () => {
@@ -89,7 +107,10 @@ describe('FilesService', () => {
     it('should upload file', async () => {
       const file = `${process.cwd()}/storage/testId/mockFile.txt`
 
-      const uploadRes = await service.upload('testId', mockUploadedFile)
+      const uploadRes = await service.upload(
+        'testId',
+        mockUploadedFile
+      )
 
       const wasSaved = existsSync(file)
 
@@ -104,23 +125,32 @@ describe('FilesService', () => {
         await service.upload('fakeId', mockUploadedFile)
         throw Error()
       } catch (e) {
-        expect((e as Error).message).toEqual("dir for this user doesn't exist")
+        expect((e as Error).message).toEqual(
+          "dir for this user doesn't exist"
+        )
       }
     })
   })
 
   describe('getFile', () => {
     it('should get correct path', () => {
-      const pathToFile = service.getFile('testId', 'testFile.txt')
+      const pathToFile = service.getFile(
+        'testId',
+        'testFile.txt'
+      )
 
       expect(existsSync(pathToFile)).toBeTruthy()
     })
 
     it('should get correct file content', () => {
-      const pathToFile = service.getFile('testId', 'testFile.txt')
+      const pathToFile = service.getFile(
+        'testId',
+        'testFile.txt'
+      )
 
       let text = 'no file'
-      if (existsSync(pathToFile)) text = readFileSync(pathToFile, 'utf8')
+      if (existsSync(pathToFile))
+        text = readFileSync(pathToFile, 'utf8')
 
       expect(text).toEqual('some string')
     })
@@ -158,13 +188,15 @@ describe('FilesService', () => {
     })
 
     it("should throw Error `this path doesn't exist`", () => {
-      const fn = () => service.getFilesNames('testId', 'fakeSubfolder')
+      const fn = () =>
+        service.getFilesNames('testId', 'fakeSubfolder')
 
       expect(fn).toThrowError("this path doesn't exist")
     })
 
     it('should throw Error `access denied`', () => {
-      const fn = () => service.getFilesNames('testId', '../fakeId')
+      const fn = () =>
+        service.getFilesNames('testId', '../fakeId')
 
       expect(fn).toThrowError('access denied')
     })

@@ -1,6 +1,11 @@
 import { Request, Response } from 'express'
 import fileUpload, { UploadedFile } from 'express-fileupload'
-import { Controller, IRoute, Methods } from '../typings'
+import {
+  Controller,
+  IRoute,
+  Methods,
+  ServiceError,
+} from '../typings'
 import { FilesService } from './files.service'
 
 export class FilesController extends Controller {
@@ -41,26 +46,48 @@ export class FilesController extends Controller {
   init(req: Request, res: Response) {
     const id = req.session['user']?.id
     if (!id) return res.status(401).send('unauthorized')
-    const service = new FilesService()
-    res.status(201).end(service.init(id))
+
+    try {
+      const service = new FilesService()
+      res.status(201).end(service.init(id))
+    } catch (err) {
+      if (err instanceof ServiceError)
+        res.status(err.status).send(err.message)
+      throw err
+    }
   }
 
   makeDir(req: Request, res: Response) {
     const id = req.session['user']?.id
-    const dir = req.body.path
     if (!id) return res.status(401).send('unauthorized')
-    if (!id) return res.status(400).send('no path')
-    const service = new FilesService()
-    res.status(201).end(service.makeDir(id, dir))
+
+    const dir = req.body.path
+    if (!dir) return res.status(400).send('no path')
+
+    try {
+      const service = new FilesService()
+      res.status(201).end(service.makeDir(id, dir))
+    } catch (err) {
+      if (err instanceof ServiceError)
+        res.status(err.status).send(err.message)
+      throw err
+    }
   }
 
   async upload(req: Request, res: Response) {
     if (typeof req.files?.file == 'object') {
       const id = req.session['user']?.id
       if (!id) return res.status(401).send('unauthorized')
-      const file = req.files?.file as UploadedFile
-      const service = new FilesService()
-      res.status(201).end(await service.upload(id, file))
+
+      try {
+        const file = req.files?.file as UploadedFile
+        const service = new FilesService()
+        res.status(201).end(await service.upload(id, file))
+      } catch (err) {
+        if (err instanceof ServiceError)
+          res.status(err.status).send(err.message)
+        throw err
+      }
     }
     return res.status(400).end('faild')
   }
@@ -68,18 +95,31 @@ export class FilesController extends Controller {
   download(req: Request, res: Response) {
     const id = req.session['user']?.id
     if (!id) return res.status(401).send('unauthorized')
-    const path = req.query?.path ?? ''
-    const service = new FilesService()
-    const file = service.getFile(id, path as string)
-    return res.status(200).download(file)
+
+    try {
+      const path = (req.query?.path as string) ?? ''
+      const service = new FilesService()
+      const file = service.getFile(id, path)
+      res.status(200).download(file)
+    } catch (err) {
+      if (err instanceof ServiceError)
+        res.status(err.status).send(err.message)
+      throw err
+    }
   }
 
   getFiles(req: Request, res: Response) {
     const id = req.session['user']?.id
     if (!id) return res.status(401).send('unauthorized')
-    const path = req.query?.path ?? ''
-    const service = new FilesService()
-    const names = service.getFilesNames(id, path as string)
-    res.status(200).send(names)
+
+    try {
+      const path = (req.query?.path as string) ?? ''
+      const service = new FilesService()
+      res.status(200).send(service.getFilesNames(id, path))
+    } catch (err) {
+      if (err instanceof ServiceError)
+        res.status(err.status).send(err.message)
+      throw err
+    }
   }
 }
