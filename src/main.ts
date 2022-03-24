@@ -9,7 +9,10 @@ import { config } from './config'
 
 const app: Application = express()
 
-const controllers: Controller[] = [new FilesController(), new AuthController()]
+const controllers: Controller[] = [
+  new FilesController(),
+  new AuthController(),
+]
 const middlewares: RequestHandler[] = [
   bodyParser.json(),
   session(config.session),
@@ -17,6 +20,7 @@ const middlewares: RequestHandler[] = [
 
 const server = new Server(app, config.server.port)
 
+server.hideExpress()
 server.loadMiddlewares(middlewares)
 server.loadControllers(controllers)
 

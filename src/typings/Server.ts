@@ -8,6 +8,10 @@ export class Server {
     private readonly port: number
   ) {}
 
+  public hideExpress() {
+    this.app.disable('x-powered-by')
+  }
+
   public loadMiddlewares(middlewares: RequestHandler[]): void {
     middlewares.forEach((middleware) =>
       this.app.use(middleware)
