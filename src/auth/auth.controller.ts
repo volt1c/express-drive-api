@@ -30,7 +30,7 @@ export class AuthController extends Controller {
     try {
       const service = new AuthService()
       req.session['user'] = {
-        id: service.login(name, pass),
+        id: await service.login(name, pass),
       }
       res.status(200).send('success')
     } catch (err) {
