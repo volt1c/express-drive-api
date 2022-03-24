@@ -6,6 +6,7 @@ import { FilesController } from './files/files.controller'
 import { AuthController } from './auth/auth.controller'
 import { connect } from 'mongoose'
 import { config } from './config'
+import cors from 'cors'
 
 const app: Application = express()
 
@@ -14,6 +15,7 @@ const controllers: Controller[] = [
   new AuthController(),
 ]
 const middlewares: RequestHandler[] = [
+  cors(),
   bodyParser.json(),
   session(config.session),
 ]
