@@ -9,7 +9,9 @@ export class Server {
   ) {}
 
   public loadMiddlewares(middlewares: RequestHandler[]): void {
-    middlewares.forEach((middleware) => this.app.use(middleware))
+    middlewares.forEach((middleware) =>
+      this.app.use(middleware)
+    )
   }
 
   public loadControllers(controllers: Controller[]) {
